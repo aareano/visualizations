@@ -4,10 +4,7 @@ body {
 }
 
 .block {
-  border-color: grey;
-  border-radius: 1px;
-  border-width: 1px;
-  border-style: solid;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   padding: 20px;
   margin: 10px 0;
 }
@@ -27,4 +24,14 @@ body {
 
 #d3-container svg {
   
+}
+
+#toc {
+  list-style-type: none;
+  list-style-position: inside;
+  padding-left: 20px;
+}
+
+#toc li:before {
+  content: "— ";
 }
