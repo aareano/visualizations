@@ -1,15 +1,25 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<head>
+  <link rel="stylesheet" href="../style.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
 <body>
-  <div>
-    <a style="padding: 20px" href="https://bl.ocks.org/mbostock/3231298">https://bl.ocks.org/mbostock/3231298</a>
+  <h1 id="title" class="block">Collision Detection</h1>
+  <div id="description" class="block">
+    Example: <a href="https://bl.ocks.org/mbostock/3231298">https://bl.ocks.org/mbostock/3231298</a>
   </div>
+  <div id="d3" class="block"/>
 </body>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script>
 
-var width = 960,
-    height = 500;
+var style = window.getComputedStyle(document.getElementById("d3"), null);
+
+var width = parseInt(style.getPropertyValue("width"), 10),
+    height = parseInt(style.getPropertyValue("height"), 10),
+    yOffset = document.getElementById("d3").offsetTop,
+    xOffset = document.getElementById("d3").offsetLeft;
 
 var nodes = d3.range(200).map(function() { return {
         radius: Math.random() * 12 + 4,
@@ -36,10 +46,9 @@ var simulationGav = d3.forceSimulation(nodes)
     .force("gravity", d3.forceManyBody().strength(
         function(d, i) { return i == 1 ? -100 : 0.1 }));
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("div#d3").append("svg")
     .attr("width", width)
-    .attr("height", height)
-    .attr("style", "border-color: grey; border-style: solid; margin: 20px");
+    .attr("height", height);
 
 svg.selectAll("circle")
     .data(nodes.slice(1))
@@ -60,8 +69,8 @@ simulation.on("tick", function(e) {
 });
 
 svg.on("mousemove", function() {
-  root.fx = d3.event.clientX;
-  root.fy = d3.event.clientY;
+  root.fx = d3.event.clientX - xOffset;
+  root.fy = d3.event.clientY - yOffset;
   simulation.restart();
 });
 
