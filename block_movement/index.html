@@ -52,10 +52,11 @@ function addElevators(svg, elevators) {
     .attr('width', (d, i) => d.width)
     .attr('height', (d, i) => d.height)
     .attr('fill', (d, i) => d.fill)
+    .attr('id', 'elevator')
 }
 
 function addElevatorBehavior(svg) {
-  svg.on("click", onSvgClick);
+  svg.on('click', onSvgClick);
 }
 
 function onSvgClick() {
@@ -64,13 +65,25 @@ function onSvgClick() {
     .transition()
     .duration(1000)
     .ease(d3.easePolyInOut)
-    .attr("x", (d, i) => d3.event.clientX - dim.xOffset - d.width / 2)
-    .attr("y", (d, i) => d3.event.clientY - dim.yOffset - d.height / 2)
+    .attr('x', (d, i) => d3.event.clientX - dim.xOffset - d.width / 2)
+    .attr('y', (d, i) => d3.event.clientY - dim.yOffset - d.height / 2)
+    .tween('attr.fill', (elevator, i) => (t) => {
+      // does not, in fact, depend on t at all
+      var node = document.getElementById('elevator');
+      var x = node.getAttribute('x');
+      var y = node.getAttribute('y');
+      console.log(d3.hsl(elevator.hue, x / dim.width, y / dim.height))
+      node.setAttribute('fill', d3.hsl(elevator.hue, x / dim.width, y / dim.height));
+    })
+}
+
+function colorPaletteInterpolator(t) {
+
 }
 
 // The animation really only makes sense for one elevator, despite what the
 // plural name suggests.
-var elevators = [{id: 1, fill: '#4e6c90', width: 20, height: 20, state: false}];
+var elevators = [{id: 1, fill: '#4e6c90', hue: 200, width: 20, height: 20, state: false}];
 var svg = addSvgContainer();
 
 addElevators(svg, elevators);
