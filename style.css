@@ -20,11 +20,11 @@ body {
     
 }
 
-#d3 {
+#d3-container {
   min-height: 300px;
   padding: 0;
 }
 
-#d3 svg {
+#d3-container svg {
   
 }

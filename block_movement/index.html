@@ -1,13 +1,64 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
+<meta charset='utf-8'>
 <head>
-  <link rel="stylesheet" href="../style.css">
+  <title>Block Movement</title>
+  <link rel='stylesheet' href='../style.css'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
 </head>
 <body>
-  <h1>Block movement</h1>
-  <div id="d3" />
+  <h1 id='title' class='block'>Block Movement</h1>
+  <div id='description' class='block'>
+    <p>
+      Ease block up or down on 'space'
+    </p>
+    <p>
+      <a href='..'>[Back]</a>
+    </p>
+  </div>
+  <div id='d3-container' class='block'/>
 </body>
-<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src='https://d3js.org/d3.v5.min.js'></script>
 <script>
-  
+
+function getSvgDim() {
+  var d3Container = document.getElementById('d3-container');
+  var style = window.getComputedStyle(d3Container, null);
+  return svgDim = {
+    width: parseInt(style.getPropertyValue('width'), 10),
+    height: parseInt(style.getPropertyValue('height'), 10),
+    yOffset: d3Container.offsetTop,
+    xOffset: d3Container.offsetLeft
+  }
+}
+
+function addSvgContainer() {
+  var dim = getSvgDim();
+  console.log(d3.select('div#d3-container'), dim.width, dim.height);
+  var svg = d3.select('div#d3-container').append('svg')
+    .attr('width', dim.width)
+    .attr('height', dim.height);
+  console.log(svg)
+  return svg;
+}
+
+function addElevators(svg, elevators) {
+  var svgDim = getSvgDim();
+  var blockWidth = blockHeight = 20;
+  svg.selectAll('rect')
+    .data(elevators)
+    .enter()
+    .append('rect')
+    .attr('x', (d, i) => svgDim.width / 2)
+    .attr('y', (d, i) => svgDim.height - (d.height * 2))
+    .attr('width', (d, i) => d.width)
+    .attr('height', (d, i) => d.height)
+    .attr('fill', (d, i) => d.fill);
+}
+
+var elevators = [{id: 1, fill: '#4e6c90', width: 20, height: 20}];
+var svg = addSvgContainer();
+console.log(svg);
+
+addElevators(svg, elevators);
+
 </script>
