@@ -9,7 +9,8 @@
   <h1 id='title' class='block'>Block Movement</h1>
   <div id='description' class='block'>
     <p>
-      Ease block up or down on 'space'
+      Ease block to click location.
+      Example: <a href='http://bl.ocks.org/hunzy/9929724'>http://bl.ocks.org/hunzy/9929724</a>
     </p>
     <p>
       <a href='..'>[Back]</a>
@@ -33,11 +34,9 @@ function getSvgDim() {
 
 function addSvgContainer() {
   var dim = getSvgDim();
-  console.log(d3.select('div#d3-container'), dim.width, dim.height);
   var svg = d3.select('div#d3-container').append('svg')
     .attr('width', dim.width)
     .attr('height', dim.height);
-  console.log(svg)
   return svg;
 }
 
@@ -52,13 +51,29 @@ function addElevators(svg, elevators) {
     .attr('y', (d, i) => svgDim.height - (d.height * 2))
     .attr('width', (d, i) => d.width)
     .attr('height', (d, i) => d.height)
-    .attr('fill', (d, i) => d.fill);
+    .attr('fill', (d, i) => d.fill)
 }
 
-var elevators = [{id: 1, fill: '#4e6c90', width: 20, height: 20}];
+function addElevatorBehavior(svg) {
+  svg.on("click", onSvgClick);
+}
+
+function onSvgClick() {
+  var dim = getSvgDim();
+  d3.selectAll('rect')
+    .transition()
+    .duration(1000)
+    .ease(d3.easePolyInOut)
+    .attr("x", (d, i) => d3.event.clientX - dim.xOffset - d.width / 2)
+    .attr("y", (d, i) => d3.event.clientY - dim.yOffset - d.height / 2)
+}
+
+// The animation really only makes sense for one elevator, despite what the
+// plural name suggests.
+var elevators = [{id: 1, fill: '#4e6c90', width: 20, height: 20, state: false}];
 var svg = addSvgContainer();
-console.log(svg);
 
 addElevators(svg, elevators);
+addElevatorBehavior(svg);
 
 </script>
