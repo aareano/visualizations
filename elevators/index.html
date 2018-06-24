@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<head>
+  <title>Elevators</title>
+  <link rel='stylesheet' href='../style.css'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+</head>
+<body>
+  <h1 id='title' class='block'>Elevators</h1>
+  <div id='description' class='block'>
+    <p>
+      <em>n</em> elevators move <em>m</em> blocks from a source to a destination
+      floor.
+    </p>
+    <p>
+      <a href='../index.html'>[Back]</a>
+    </p>
+  </div>
+  <div id='d3-container' class='block'/>
+</body>
+<script src='https://d3js.org/d3.v5.min.js'></script>
+<script>
+function getContainerDim() {
+  var d3Container = document.getElementById('d3-container');
+  var style = window.getComputedStyle(d3Container, null);
+  return containerDim = {
+    width: parseInt(style.getPropertyValue('width'), 10),
+    height: parseInt(style.getPropertyValue('height'), 10),
+    yOffset: d3Container.offsetTop,
+    xOffset: d3Container.offsetLeft
+  }
+}
+
+function addSvgContainer() {
+  var dim = getContainerDim();
+  var svg = d3.select('div#d3-container').append('svg')
+    .attr('width', dim.width)
+    .attr('height', dim.height);
+  return svg;
+}
+
+function addElevators(container, elevators) {
+  var containerDim = getContainerDim();
+  var spacing = containerDim.width / elevators.length;
+  container.selectAll('rect.elevator')
+    .data(elevators)
+    .enter()
+    .append('rect')
+    .attr('class', 'elevator')
+    .attr('id', (el, i) => el.id)
+    .attr('x', (el, i) => spacing * (i + 1/2))
+    .attr('y', (el, i) => containerDim.height - 50)
+    .attr('width', (el, i) => 20)
+    .attr('height', (el, i) => 40)
+    .attr('fill', (el, i) => el.fill);
+}
+
+var elevators = [{
+    id: 1,
+    fill: '#4e6c90',
+    floor: 0,
+    population: 0,
+  }, {
+    id: 2,
+    fill: '#4e6c90',
+    floor: 1,
+    population: 0,
+  }, {
+    id: 3,
+    fill: '#4e6c90',
+    floor: false,
+    population: 0,
+  }
+];
+var svg = addSvgContainer();
+addElevators(svg, elevators);
+
+</script>
